@@ -1,9 +1,0 @@
-$(document).on('page:fetch', function () {
-    pace.start();
-});
-$(document).on('page:change', function () {
-    pace.done();
-});
-$(document).on('page:restore', function () {
-    pace.remove();
-});
