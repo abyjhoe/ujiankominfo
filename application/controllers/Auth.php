@@ -63,13 +63,27 @@ class Auth extends CI_Controller
 
     public function test()
     {
-        $url = "https://api.kotamobagu.go.id/login.php";
-        $get_url = file_get_contents($url);
-        $data = json_decode($get_url);
-
-        $data_array = array(
-            'message' => $data
+        $user = $this->input->post('email');
+        $pass = $this->input->post('password');
+        $ch = curl_init();
+        $param = array(
+            'username' => $user,
+            'password' => $pass,
         );
-        $this->load->view('json/json_list', $data_array);
+        curl_setopt($ch, CURLOPT_URL,            "https://api.kotamobagu.go.id/login.php");
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POST,           1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($param));
+        curl_setopt($ch, CURLOPT_HTTPHEADER,     array('Content-Type: application/x-www-form-urlencoded'));
+        $result = curl_exec($ch);
+        curl_close($ch);
+        $result = json_decode($result, true);
+        $ujian = $result;
+        $date = time();
+        $data = [
+            'ujian' => $ujian,
+            'date' => $date
+        ];
+        $this->load->view('Admin/dashboard', $data);
     }
 }
